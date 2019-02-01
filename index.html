@@ -1,0 +1,120 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
+
+  <!-- for Google -->
+  <meta name="description" content="พิมพ์ชื่อจังหวัด แล้วแสดงเป็นแผนที่รูปหกเหลี่ยมไปอวดเพื่อนได้เลย!" />
+  <meta name="keywords" content="hexmap, map, visualization, choropleth, thailand, แผนที่, จังหวัด, รูปหกเหลี่ยม, ประเทศไทย, ไทย" />
+  <meta name="author" content="Boonmee Lab" />
+
+  <!-- for Facebook -->
+  <meta property="og:title" content="Hex Map of Thailand" />
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://puripant.ruchikachorn.com/thailand_hex_map/thumbnail.jpg" />
+  <meta property="og:url" content="http://puripant.ruchikachorn.com/thailand_hex_map/" />
+  <meta property="og:description" content="พิมพ์ชื่อจังหวัด แล้วแสดงเป็นแผนที่รูปหกเหลี่ยมไปอวดเพื่อนได้เลย!" />
+
+  <!-- for Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Hex Map of Thailand" />
+  <meta name="twitter:description" content="พิมพ์ชื่อจังหวัด แล้วแสดงเป็นแผนที่รูปหกเหลี่ยมไปอวดเพื่อนได้เลย!" />
+  <meta name="twitter:image" content="http://puripant.ruchikachorn.com/thailand_hex_map/thumbnail.jpg" />
+
+  <title>First Time Voters</title>
+  <!-- <link href="//fonts.googleapis.com/css?family=Libre+Baskerville|Noto+Sans|Rubik" rel="stylesheet"> -->
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="sharer.css">
+
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css">
+  <link rel="stylesheet" href="main.css">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129270906-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-129270906-1');
+  </script>
+</head>
+
+<body>
+  <script>
+    window.fbAsyncInit = function () {
+      FB.init({
+        appId: '171048360504115',
+        autoLogAppEvents: true,
+        xfbml: true,
+        version: 'v3.2'
+      });
+    };
+
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) { return; }
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <header class="site-header">
+    <nav class="navbar navbar-light">
+      <a class="navbar-brand" href="/">
+        <img src="images/site-logo.png">
+        <h6>In Vote We Trust</h6>
+      </a>
+      <div class="ml-auto d-flex navbar-more">
+        <div class="lang">
+          <!-- <a class="active">ภาษาไทย</a>
+            <a>English</a> -->
+        </div>
+        <div class="social">
+          <a href="https://www.facebook.com/electinthai"><i class="fab fa-facebook-f fa-fw"></i></a>
+          <a href="https://twitter.com/electinthai"><i class="fab fa-twitter fa-fw"></i></a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <section id="content">
+    <div id="input">
+      <select id="provinces" class="ui fluid search dropdown" multiple="">
+        <option value="">เลือกจังหวัด …</option>
+      </select>
+    </div>
+    <div id="result"></div>
+
+    <div id="credit">
+      <a href="" download="map.png" onclick="download_canvas(this)">ดาวน์โหลดแผนที่เป็นภาพ</a>
+      <br />
+      สร้างสรรค์โดย
+      <div class="logo boonmeelab"><a href="https://www.facebook.com/BoonmeeLab/"><span></span></a></div>
+    </div>
+  </section>
+
+  <section id="popup" class="shown">
+    <div class="events">
+    </div>
+  </sectionsection>
+
+	<!--  Adapted from https://gist.github.com/michellechandra/0b2ce4923dc9b5809922 -->
+  <script src="http://d3js.org/d3.v5.min.js"></script>
+  <script src="https://unpkg.com/topojson@3"></script>
+	<script
+	  src="https://code.jquery.com/jquery-3.1.1.min.js"
+	  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+	  crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
+  <script src="main.js"></script>
+  <script src="sharer.js"></script>
+
+</body>
+</html>
