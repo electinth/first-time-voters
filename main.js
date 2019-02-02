@@ -11,9 +11,9 @@ let projection = d3.geoAlbers()
   .translate([-100, 200]);
 
 // Define linear scale for output
-let color = d3.scaleLinear()
+let color = d3.scaleLinear().clamp(true)
   .domain([0, 1])
-  .range(["gainsboro", "#eb307c"]);
+  .range(["#e4e5e6", "#14E6C8"]);
 
 //Create and append canvas
 let canvas = d3.select("#result").append("canvas")
@@ -21,6 +21,7 @@ let canvas = d3.select("#result").append("canvas")
   .attr("width", width)
   .attr("height", height);
 let ctx = document.getElementById("map").getContext("2d");
+ctx.imageSmoothingEnabled = false;
 
 //For downloading canvas from https://stackoverflow.com/questions/12796513/html5-canvas-to-png-file
 function download_canvas(el) {
@@ -150,18 +151,18 @@ const thaiHexMap = [
 ];
 
 let geo;
-let updateGeo = function (province, visited) {
-  for (let i = 0; i < geo.length; i++) {
-    if (province === geo[i].properties.NAME_1) {
-      if (typeof visited != "undefined") {
-        geo[i].properties.visited = visited;
-        break;
-      } else {
-        return geo[i].properties.visited;
-      }
-    }
-  }
-}
+// let updateGeo = function (province, visited) {
+//   for (let i = 0; i < geo.length; i++) {
+//     if (province === geo[i].properties.NAME_1) {
+//       if (typeof visited != "undefined") {
+//         geo[i].properties.visited = visited;
+//         break;
+//       } else {
+//         return geo[i].properties.visited;
+//       }
+//     }
+//   }
+// }
 let hexCenters = [];
 let updateMap = function () {
   for (let i = 0; i < geo.length; i++) {
@@ -187,13 +188,13 @@ let updateMap = function () {
       cx: c[0],
       cy: c[1],
       name: d.properties.NAME_1,
-      name_th: findProvinceTH(d.properties.NAME_1)
+      name_th: d.properties.NL_NAME_1 //findProvinceTH(d.properties.NAME_1)
     });
 
     let hexCoords = hex(c, radius);
 
     ctx.beginPath();
-    ctx.fillStyle = d.properties.visited ? color(d.properties.visited) : "#dcdcdc";
+    ctx.fillStyle = color((d.properties.firsttime * firsttime_turnout / 100) / (d.properties.number1 - d.properties.number2)); //d.properties.visited ? color(d.properties.visited) : color.range()[0];
     for (let j = 0; j < hexCoords.length; j++) {
       if (j === 0) {
         ctx.moveTo(hexCoords[j][0], hexCoords[j][1]);
@@ -206,48 +207,38 @@ let updateMap = function () {
 }
 
 let provinces;
-let findProvinceTH = function(province) {
-  // Find the corresponding province inside the GeoJSON
-  for (let i = 0; i < provinces.length; i++)  {
-    if (province === provinces[i].province) {
-      return provinces[i].provinceTH;
-    }
-  }
-}
+// let findProvinceTH = function(province) {
+//   // Find the corresponding province inside the GeoJSON
+//   for (let i = 0; i < provinces.length; i++)  {
+//     if (province === provinces[i].province) {
+//       return provinces[i].provinceTH;
+//     }
+//   }
+// }
 
-d3.csv("data/provinces-visited.csv").then(function(data) {
+d3.csv("data/votes_by_province.csv").then(function(data) {
   provinces = data;
-
-  // dropdown
-  let $provinces = $("#provinces");
-  provinces.forEach(function(row) {
-    $provinces.append($("<option>", {
-      value: row.province,
-      text: row.provinceTH
-    }));
-  });
-  $('.ui.dropdown')
-    .dropdown({
-      onAdd: function(value, text, $selectedItem) {
-        updateGeo(value, 1);
-        updateMap();
-      },
-      onRemove: function(value, text, $selectedItem) {
-        updateGeo(value, 0);
-        updateMap();
-      }
-    });
 
   // Load GeoJSON data and merge with states data
   d3.json("data/thailand-topo.json").then(function(json) {
     geo = topojson.feature(json, json.objects.thailand).features;
 
-    // Loop through each province in the .csv file
+    // // Loop through each province in the .csv file
+    // provinces.forEach(function(d) {
+    //   updateGeo(d.province, d.visited);
+    // });
     provinces.forEach(function(d) {
-      updateGeo(d.province, d.visited);
+      for (let i = 0; i < geo.length; i++) {
+        if (d.province === geo[i].properties.NL_NAME_1) {
+          geo[i].properties.number1 = d.number1;
+          geo[i].properties.number2 = d.number2;
+          geo[i].properties.firsttime = d.firsttime;
+          break;
+        }
+      }
     });
 
-    let blue;
+    let red;
     let closest_hex;
     canvas.on("mousemove", function() {
       let mouseX = d3.event.layerX || d3.event.offsetX;
@@ -258,8 +249,8 @@ d3.csv("data/provinces-visited.csv").then(function(data) {
         .duration(500)
         .style("opacity", 0);
 
-      blue = ctx.getImageData(mouseX, mouseY, 1, 1).data[2]; // check blue color
-      if (blue > 0) { // map area
+      red = ctx.getImageData(mouseX, mouseY, 1, 1).data[0]; // check red color
+      if (red > 0) { // map area
         let closest_dist = Number.MAX_SAFE_INTEGER;
         hexCenters.forEach(hex => {
           let dist = Math.abs((hex.cx - mouseX) * (hex.cx - mouseX) + (hex.cy - mouseY) * (hex.cy - mouseY));
@@ -271,26 +262,33 @@ d3.csv("data/provinces-visited.csv").then(function(data) {
 
         // tooltip on in the map
         tooltip.transition()
-          .duration(200)
+          .duration(100)
           .style("opacity", 0.8);
         tooltip.html(closest_hex.name_th)
-          .style("left", d3.event.pageX + "px")
-          .style("top", (d3.event.pageY - 30) + "px");
+          .style("left", (d3.event.pageX + 5) + "px")
+          .style("top",  (d3.event.pageY - 35) + "px");
       }
     })
-    .on("click", function () {
-      if (blue > 0) { // map area
-        if (blue > 200) { // unselected
-          $("#provinces").dropdown("set selected", closest_hex.name);
-          updateGeo(closest_hex.name, 1);
-        } else { // already selected
-          $("#provinces").dropdown("remove selected", closest_hex.name);
-          updateGeo(closest_hex.name, 0);
-        }
-        updateMap();
-      }
-    });
+    // .on("click", function () {
+    //   console.log(red);
+    //   if (red > 0) { // map area
+    //     if (red > 150) { // unselected
+    //       // $("#provinces").dropdown("set selected", closest_hex.name);
+    //       updateGeo(closest_hex.name, 1);
+    //     } else { // already selected
+    //       // $("#provinces").dropdown("remove selected", closest_hex.name);
+    //       updateGeo(closest_hex.name, 0);
+    //     }
+    //     updateMap();
+    //   }
+    // });
 
     updateMap();
   });
 });
+
+let firsttime_turnout = 0;
+function sliderUpdate(value) {
+  firsttime_turnout = value;
+  updateMap();
+}
