@@ -23,16 +23,16 @@ let canvas = d3.select("#result").append("canvas")
 let ctx = document.getElementById("map").getContext("2d");
 ctx.imageSmoothingEnabled = false;
 
-//For downloading canvas from https://stackoverflow.com/questions/12796513/html5-canvas-to-png-file
-function download_canvas(el) {
-  let url = document.getElementById("map").toDataURL("image/png");
+// //For downloading canvas from https://stackoverflow.com/questions/12796513/html5-canvas-to-png-file
+// function download_canvas(el) {
+//   let url = document.getElementById("map").toDataURL("image/png");
 
-  url = url.replace("image/png", "image/octet-stream");
-  // url = url.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
-  // url = url.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=Canvas.png');
+//   url = url.replace("image/png", "image/octet-stream");
+//   // url = url.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
+//   // url = url.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=Canvas.png');
 
-  el.href = url;
-};
+//   el.href = url;
+// };
 
 // Append div for tooltip
 let tooltip = d3.select("body").append("div")
@@ -151,83 +151,68 @@ const thaiHexMap = [
 ];
 
 let geo;
-// let updateGeo = function (province, visited) {
-//   for (let i = 0; i < geo.length; i++) {
-//     if (province === geo[i].properties.NAME_1) {
-//       if (typeof visited != "undefined") {
-//         geo[i].properties.visited = visited;
-//         break;
-//       } else {
-//         return geo[i].properties.visited;
-//       }
-//     }
-//   }
-// }
 let hexCenters = [];
 let updateMap = function () {
-  for (let i = 0; i < geo.length; i++) {
-    let d = geo[i];
-    let coords = d.geometry.coordinates[0];
-    if (coords.length == 1) { //find the biggest part in each province
-      let max_length = -1;
-      let max_i = -1;
-      for (let i = 0; i < d.geometry.coordinates.length; i++) {
-        if (max_length < d.geometry.coordinates[i][0].length) {
-          max_length = d.geometry.coordinates[i][0].length;
-          max_i = i;
-        }
-      }
-      coords = d.geometry.coordinates[max_i][0];
-    }
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  let hexCoords = [];
+  for (let i = 0; i < geo.length; i++) {
     let radius = 18;
-    let hexCenter = thaiHexMap.find(h => h.id === +d.properties.ISO);
+    let hexCenter = thaiHexMap.find(h => h.id === +geo[i].properties.ISO);
     let c = [(hexCenter.x - ((hexCenter.y % 2 === 0) ? 0.5 : 0)) * radius * Math.sqrt(3) + 50, hexCenter.y * radius * 3 / 2 + 50];
+
+    hexCoords.push(hex(c, radius));
     hexCenters.push({
       id: hexCenter.id,
       cx: c[0],
       cy: c[1],
-      name: d.properties.NAME_1,
-      name_th: d.properties.NL_NAME_1 //findProvinceTH(d.properties.NAME_1)
+      name: geo[i].properties.NAME_1,
+      name_th: geo[i].properties.NL_NAME_1 //findProvinceTH(d.properties.NAME_1)
     });
 
-    let hexCoords = hex(c, radius);
-
+    const ratio = (geo[i].properties.firsttime * firsttime_turnout / 100) / (geo[i].properties.number1 - geo[i].properties.number2);
     ctx.beginPath();
-    ctx.fillStyle = color((d.properties.firsttime * firsttime_turnout / 100) / (d.properties.number1 - d.properties.number2)); //d.properties.visited ? color(d.properties.visited) : color.range()[0];
-    for (let j = 0; j < hexCoords.length; j++) {
+    for (let j = 0; j < hexCoords[i].length; j++) {
       if (j === 0) {
-        ctx.moveTo(hexCoords[j][0], hexCoords[j][1]);
+        ctx.moveTo(hexCoords[i][j][0], hexCoords[i][j][1]);
       } else {
-        ctx.lineTo(hexCoords[j][0], hexCoords[j][1]);
+        ctx.lineTo(hexCoords[i][j][0], hexCoords[i][j][1]);
       }
     }
+    ctx.closePath();
+
+    // fill
+    ctx.fillStyle = color(ratio); //d.properties.visited ? color(d.properties.visited) : color.range()[0];
     ctx.fill();
+  }
+  for (let i = 0; i < geo.length; i++) {
+    const ratio = (geo[i].properties.firsttime * firsttime_turnout / 100) / (geo[i].properties.number1 - geo[i].properties.number2);
+    ctx.beginPath();
+    for (let j = 0; j < hexCoords[i].length; j++) {
+      if (j === 0) {
+        ctx.moveTo(hexCoords[i][j][0], hexCoords[i][j][1]);
+      } else {
+        ctx.lineTo(hexCoords[i][j][0], hexCoords[i][j][1]);
+      }
+    }
+    ctx.closePath();
+
+    // stroke
+    if (ratio >= 1) {
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "white";
+      ctx.stroke();
+    }
   }
 }
 
-let provinces;
-// let findProvinceTH = function(province) {
-//   // Find the corresponding province inside the GeoJSON
-//   for (let i = 0; i < provinces.length; i++)  {
-//     if (province === provinces[i].province) {
-//       return provinces[i].provinceTH;
-//     }
-//   }
-// }
-
 d3.csv("data/votes_by_province.csv").then(function(data) {
-  provinces = data;
-
   // Load GeoJSON data and merge with states data
   d3.json("data/thailand-topo.json").then(function(json) {
     geo = topojson.feature(json, json.objects.thailand).features;
 
-    // // Loop through each province in the .csv file
-    // provinces.forEach(function(d) {
-    //   updateGeo(d.province, d.visited);
-    // });
-    provinces.forEach(function(d) {
+    // Loop through each province in the .csv file
+    data.forEach(function(d) {
       for (let i = 0; i < geo.length; i++) {
         if (d.province === geo[i].properties.NL_NAME_1) {
           geo[i].properties.number1 = d.number1;
@@ -268,27 +253,19 @@ d3.csv("data/votes_by_province.csv").then(function(data) {
           .style("left", (d3.event.pageX + 5) + "px")
           .style("top",  (d3.event.pageY - 35) + "px");
       }
-    })
-    // .on("click", function () {
-    //   console.log(red);
-    //   if (red > 0) { // map area
-    //     if (red > 150) { // unselected
-    //       // $("#provinces").dropdown("set selected", closest_hex.name);
-    //       updateGeo(closest_hex.name, 1);
-    //     } else { // already selected
-    //       // $("#provinces").dropdown("remove selected", closest_hex.name);
-    //       updateGeo(closest_hex.name, 0);
-    //     }
-    //     updateMap();
-    //   }
-    // });
+    });
 
     updateMap();
   });
 });
 
 let firsttime_turnout = 0;
+let range_number = d3.select(".range-number");
 function sliderUpdate(value) {
+  range_number
+    .style("left", (320-40-40)*value/100)
+    .text(value);
+
   firsttime_turnout = value;
   updateMap();
 }

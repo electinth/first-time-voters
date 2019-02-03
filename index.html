@@ -29,7 +29,6 @@
   <link rel="stylesheet" href="header.css">
   <link rel="stylesheet" href="sharer.css">
 
-  <!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css"> -->
   <link rel="stylesheet" href="main.css">
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -85,27 +84,26 @@
   <section id="content">
     <div id="result"></div>
     <div id="input">
-      <input type="range" value="0" oninput="sliderUpdate(this.value)" onchange="sliderUpdate(this.value)"></input>
+      <div class="range-number">0</div>
+      <input type="range" min="0" max="100" step="1" value="0" oninput="sliderUpdate(this.value)" onchange="sliderUpdate(this.value)"></input>
+      <p>จำนวนคนรุ่นใหม่ที่ออกไปใช้สิทธิ์ (%)</p>
     </div>
 
-    <div id="credit">
+    <!-- <div id="credit">
       <a href="" download="map.png" onclick="download_canvas(this)">ดาวน์โหลดแผนที่เป็นภาพ</a>
       <br />
       สร้างสรรค์โดย
       <div class="logo boonmeelab"><a href="https://www.facebook.com/BoonmeeLab/"><span></span></a></div>
-    </div>
+    </div> -->
   </section>
 
   <section id="popup" class="shown">
     <div class="events">
     </div>
-  </sectionsection>
+  </section>
 
-	<!--  Adapted from https://gist.github.com/michellechandra/0b2ce4923dc9b5809922 -->
   <script src="http://d3js.org/d3.v5.min.js"></script>
   <script src="https://unpkg.com/topojson@3"></script>
-	<!-- <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script> -->
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script> -->
   <script src="main.js"></script>
   <script src="sharer.js"></script>
 

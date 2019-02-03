@@ -21,10 +21,10 @@ body {
   margin-top: 50px;
 }
 
-/* a:link, a:visited, a:hover, a:active {
+a:link, a:visited, a:hover, a:active {
   font-size: 1.8em;
   color: #eb307c;
-} */
+}
 
 /* On mouse hover, lighten state color */
 path:hover {
@@ -82,6 +82,31 @@ div.tooltip {
 .boonmeelab {
   background-image: url('logo_boonmeelab.png');
   width: 150px;
+}
+
+input[type=range] + p {
+  text-align: center;
+}
+input[type=range]::before {
+  content: "0%";
+  padding: 5px;
+  font-size: 8px;
+}
+input[type=range]::after {
+  content: "100%";
+  padding: 5px;
+  font-size: 8px;
+}
+.range-number {
+  width: 40px;
+  height: 23px;
+  margin: 0 15px;
+  position: relative;
+  font-size: 16px;
+  text-align: center;
+  color: #14e6c8;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.5);
 }
 
 /* range slider http://danielstern.ca/range.css */
