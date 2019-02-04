@@ -12,10 +12,6 @@
   top: 0;
   z-index: 2;
 }
-#content {
-  height: 700px;
-  margin-top: 100px;
-}
 
 body {
   font: normal 13px 'Noto Sans Thai UI', sans-serif;
@@ -26,16 +22,26 @@ a:link, a:visited, a:hover, a:active {
   color: #14e6c8;
 }
 
-/* On mouse hover, lighten state color */
-path:hover {
-	fill-opacity: .7;
+#content {
+  height: 700px;
+  margin-top: 100px;
 }
-
-#input, #result {
+#legend, #result, #input {
   position: relative;
   width: 320px;
-  height: 600px;
-	margin: 0 auto;
+  margin: 0 auto;
+}
+#legend {
+  height: 20px;
+  font-size: 11px;
+  text-align: center;
+  color: #9B9B9B;
+}
+#result {
+  height: 580px;
+}
+#input {
+  height: 100px;
 }
 #map, .tooltip {
   position: absolute;
@@ -44,7 +50,7 @@ path:hover {
   position: absolute;
 	display: inline-block;
   left: 130px;
-  top: 400px;
+  top: 360px;
   width: 200px;
   font-family: 'Noto Sans Thai UI', sans-serif;
   line-height: 20px;

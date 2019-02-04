@@ -40,12 +40,12 @@ let tooltip = d3.select("#result").append("div")
   .style("opacity", 0);
 
 // adapted from d3 hexbin
-let hex = function ([x0, y0], radius) {
+let hex = function ([x0, y0], radius, xscale) {
   const thirdPi = Math.PI / 6;
   const angles = [thirdPi, thirdPi * 3, thirdPi * 5, thirdPi * 7, thirdPi * 9, thirdPi * 11];
 
   let corners = angles.map(function (angle) {
-    let x1 = Math.cos(angle) * radius;
+    let x1 = Math.cos(angle) * radius * xscale;
     let y1 = Math.sin(angle) * radius;
     return [x0 + x1, y0 + y1];
   });
@@ -153,15 +153,16 @@ const thaiHexMap = [
 let geo;
 let hexCenters = [];
 let updateMap = function () {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, width, height);
 
   let hexCoords = [];
   for (let i = 0; i < geo.length; i++) {
     let radius = 18;
     let hexCenter = thaiHexMap.find(h => h.id === +geo[i].properties.ISO);
-    let c = [(hexCenter.x - ((hexCenter.y % 2 === 0) ? 0.5 : 0)) * radius * Math.sqrt(3) + 50, hexCenter.y * radius * 3 / 2 + 50];
+    let c = [(hexCenter.x - ((hexCenter.y % 2 === 0) ? 0.5 : 0)) * radius * Math.sqrt(3) + 50, hexCenter.y * radius * 3 / 2 + (radius*2)];
+    let ratio = (geo[i].properties.firsttime * firsttime_turnout / 100) / (geo[i].properties.number1 - geo[i].properties.number2);
 
-    hexCoords.push(hex(c, radius));
+    hexCoords.push(hex(c, radius, (ratio >= 1)? 1 : 1 - Math.min(ratio, 1)));
     hexCenters.push({
       id: hexCenter.id,
       cx: c[0],
@@ -170,32 +171,15 @@ let updateMap = function () {
       name_th: geo[i].properties.NL_NAME_1
     });
 
-    const ratio = (geo[i].properties.firsttime * firsttime_turnout / 100) / (geo[i].properties.number1 - geo[i].properties.number2);
-    ctx.beginPath();
-    for (let j = 0; j < hexCoords[i].length; j++) {
-      if (j === 0) {
-        ctx.moveTo(hexCoords[i][j][0], hexCoords[i][j][1]);
-      } else {
-        ctx.lineTo(hexCoords[i][j][0], hexCoords[i][j][1]);
-      }
-    }
-    ctx.closePath();
+    drawCoords(hexCoords[i]);
 
     // fill
     ctx.fillStyle = color(ratio); //d.properties.visited ? color(d.properties.visited) : color.range()[0];
     ctx.fill();
   }
   for (let i = 0; i < geo.length; i++) {
-    const ratio = (geo[i].properties.firsttime * firsttime_turnout / 100) / (geo[i].properties.number1 - geo[i].properties.number2);
-    ctx.beginPath();
-    for (let j = 0; j < hexCoords[i].length; j++) {
-      if (j === 0) {
-        ctx.moveTo(hexCoords[i][j][0], hexCoords[i][j][1]);
-      } else {
-        ctx.lineTo(hexCoords[i][j][0], hexCoords[i][j][1]);
-      }
-    }
-    ctx.closePath();
+    let ratio = (geo[i].properties.firsttime * firsttime_turnout / 100) / (geo[i].properties.number1 - geo[i].properties.number2);
+    drawCoords(hexCoords[i]);
 
     // stroke
     if (ratio >= 1) {
@@ -274,4 +258,16 @@ function sliderUpdate(value) {
 
   firsttime_turnout = value;
   updateMap();
+}
+
+function drawCoords(coords) {
+  ctx.beginPath();
+  for (let i = 0; i < coords.length; i++) {
+    if (i === 0) {
+      ctx.moveTo(coords[i][0], coords[i][1]);
+    } else {
+      ctx.lineTo(coords[i][0], coords[i][1]);
+    }
+  }
+  ctx.closePath();
 }
