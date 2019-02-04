@@ -35,7 +35,7 @@ ctx.imageSmoothingEnabled = false;
 // };
 
 // Append div for tooltip
-let tooltip = d3.select("body").append("div")
+let tooltip = d3.select("#result").append("div")
   .attr("class", "tooltip")
   .style("opacity", 0);
 
@@ -167,7 +167,7 @@ let updateMap = function () {
       cx: c[0],
       cy: c[1],
       name: geo[i].properties.NAME_1,
-      name_th: geo[i].properties.NL_NAME_1 //findProvinceTH(d.properties.NAME_1)
+      name_th: geo[i].properties.NL_NAME_1
     });
 
     const ratio = (geo[i].properties.firsttime * firsttime_turnout / 100) / (geo[i].properties.number1 - geo[i].properties.number2);
@@ -245,13 +245,19 @@ d3.csv("data/votes_by_province.csv").then(function(data) {
           }
         });
 
+        for (let i = 0; i < geo.length; i++) {
+          if (closest_hex.name_th === geo[i].properties.NL_NAME_1) {
+            closest_hex.diff = geo[i].properties.number1 - geo[i].properties.number2;
+            closest_hex.firsttime = +geo[i].properties.firsttime;
+            break;
+          }
+        }
+
         // tooltip on in the map
         tooltip.transition()
           .duration(100)
           .style("opacity", 0.8);
-        tooltip.html(closest_hex.name_th)
-          .style("left", (d3.event.pageX + 5) + "px")
-          .style("top",  (d3.event.pageY - 35) + "px");
+        tooltip.html(`<b>${closest_hex.name_th}</b><br />จำนวนคนรุ่นใหม่่: <b>${closest_hex.firsttime.toLocaleString()}</b><br />ความต่างคะแนน: <b>${closest_hex.diff.toLocaleString()}</b>`);
       }
     });
 
