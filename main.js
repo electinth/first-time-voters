@@ -1,6 +1,7 @@
 //Width and height of map
-let width = 320;
-let height = 600;
+let width = 300;
+let height = 500;
+let radius = 15;
 
 // D3 Projection
 let projection = d3.geoAlbers()
@@ -151,45 +152,79 @@ const thaiHexMap = [
 ];
 
 let geo;
-let hexCenters = [];
+const frame_count_max = 20;
+let frame_count = 0;
+const fps_interval = 1000/60;
+let now, then, elapsed;
 let updateMap = function () {
-  ctx.clearRect(0, 0, width, height);
+  now = Date.now();
+  elapsed = now - then;
 
-  let hexCoords = [];
-  for (let i = 0; i < geo.length; i++) {
-    let radius = 18;
-    let hexCenter = thaiHexMap.find(h => h.id === +geo[i].properties.ISO);
-    let c = [(hexCenter.x - ((hexCenter.y % 2 === 0) ? 0.5 : 0)) * radius * Math.sqrt(3) + 50, hexCenter.y * radius * 3 / 2 + (radius*2)];
-    let ratio = (geo[i].properties.firsttime * firsttime_turnout / 100) / (geo[i].properties.number1 - geo[i].properties.number2);
+  if (elapsed > fps_interval) {
+    then = now - (elapsed % fps_interval);
 
-    hexCoords.push(hex(c, radius, (ratio >= 1)? 1 : 1 - Math.min(ratio, 1)));
-    hexCenters.push({
-      id: hexCenter.id,
-      cx: c[0],
-      cy: c[1],
-      name: geo[i].properties.NAME_1,
-      name_th: geo[i].properties.NL_NAME_1
-    });
+    ctx.clearRect(0, 0, width, height);
+    let toAnimate = false;
 
-    drawCoords(hexCoords[i]);
+    let hexCoords = [];
+    for (let i = 0; i < geo.length; i++) {
+      let ratio = (geo[i].properties.firsttime * firsttime_turnout / 100) / (geo[i].properties.number1 - geo[i].properties.number2);
+      let flip_condition = (ratio >= 1 && !hexCenters[i].flipped) || (!(ratio >= 1) && hexCenters[i].flipped); //ratio > 1 - small_num && ratio < 1 + small_num;
+      if (flip_condition) {
+        toAnimate = true;
+      }
 
-    // fill
-    ctx.fillStyle = color(ratio); //d.properties.visited ? color(d.properties.visited) : color.range()[0];
-    ctx.fill();
-  }
-  for (let i = 0; i < geo.length; i++) {
-    let ratio = (geo[i].properties.firsttime * firsttime_turnout / 100) / (geo[i].properties.number1 - geo[i].properties.number2);
-    drawCoords(hexCoords[i]);
+      hexCoords.push(hex([hexCenters[i].cx, hexCenters[i].cy], radius, Math.min(1, flip_condition ? parabola(frame_count, [0, frame_count_max], [0, 1]) : 1)));
+      drawCoords(hexCoords[i]);
 
-    // stroke
-    if (ratio >= 1) {
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = "white";
-      ctx.stroke();
+      // if (flip_condition && !hexCenters[i].flipped) {
+      //   toAnimate = true;
+      //   // hexCenters[i].flipped = true;
+      // }
+      // if (!flip_condition && hexCenters[i].flipped) { // Slider dragged to the left
+      //   toAnimate = true;
+      //   // hexCenters[i].flipped = false;
+      // }
+
+      // fill
+      ctx.fillStyle = color(ratio >= 1); //d.properties.visited ? color(d.properties.visited) : color.range()[0];
+      ctx.fill();
     }
+    for (let i = 0; i < geo.length; i++) {
+      let ratio = (geo[i].properties.firsttime * firsttime_turnout / 100) / (geo[i].properties.number1 - geo[i].properties.number2);
+      drawCoords(hexCoords[i]);
+
+      // stroke
+      if (ratio >= 1) {
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "white";
+        ctx.stroke();
+      }
+    }
+
+    if (toAnimate || frame_count > 0) {
+      if (frame_count <= frame_count_max) {
+        frame_count++;
+        requestAnimationFrame(updateMap);
+      } else {
+        toAnimate = false;
+        frame_count = 0;
+
+        for (let i = 0; i < geo.length; i++) {
+          let ratio = (geo[i].properties.firsttime * firsttime_turnout / 100) / (geo[i].properties.number1 - geo[i].properties.number2);
+          let flip_condition = (ratio >= 1 && !hexCenters[i].flipped) || (!(ratio >= 1) && hexCenters[i].flipped); //ratio > 1 - small_num && ratio < 1 + small_num;
+          if (flip_condition) {
+            hexCenters[i].flipped = !hexCenters[i].flipped;
+          }
+        }
+      }
+    }
+  } else {
+    requestAnimationFrame(updateMap);
   }
 }
 
+let hexCenters = [];
 d3.csv("data/votes_by_province.csv").then(function(data) {
   // Load GeoJSON data and merge with states data
   d3.json("data/thailand-topo.json").then(function(json) {
@@ -206,6 +241,20 @@ d3.csv("data/votes_by_province.csv").then(function(data) {
         }
       }
     });
+
+    for (let i = 0; i < geo.length; i++) {
+      let hexCenter = thaiHexMap.find(h => h.id === +geo[i].properties.ISO);
+      let c = [(hexCenter.x - ((hexCenter.y % 2 === 0) ? 0.5 : 0)) * radius * Math.sqrt(3) + 50, hexCenter.y * radius * 3 / 2 + (radius * 2)];
+
+      hexCenters.push({
+        id: hexCenter.id,
+        cx: c[0],
+        cy: c[1],
+        name: geo[i].properties.NAME_1,
+        name_th: geo[i].properties.NL_NAME_1,
+        flipped: false
+      });
+    }
 
     let red;
     let closest_hex;
@@ -245,6 +294,7 @@ d3.csv("data/votes_by_province.csv").then(function(data) {
       }
     });
 
+    then = Date.now();
     updateMap();
   });
 });
@@ -253,10 +303,12 @@ let firsttime_turnout = 0;
 let range_number = d3.select(".range-number");
 function sliderUpdate(value) {
   range_number
-    .style("left", (320-40-40)*value/100)
+    .style("left", (300-40-40)*value/100)
     .text(value);
 
   firsttime_turnout = value;
+
+  then = Date.now();
   updateMap();
 }
 
@@ -270,4 +322,9 @@ function drawCoords(coords) {
     }
   }
   ctx.closePath();
+}
+
+function parabola(x, [x_min, x_max], [y_min, y_max]) {
+  let x_mid = (x_min + x_max) / 2;
+  return (x - x_mid)*(x - x_mid)/x_mid/x_mid*y_max + y_min;
 }

@@ -23,13 +23,14 @@ a:link, a:visited, a:hover, a:active {
 }
 
 #content {
-  height: 700px;
+  height: 600px;
   margin-top: 100px;
 }
 #legend, #result, #input {
   position: relative;
-  width: 320px;
+  width: 300px;
   margin: 0 auto;
+  padding-top: 10px;
 }
 #legend {
   height: 20px;
@@ -38,7 +39,7 @@ a:link, a:visited, a:hover, a:active {
   color: #9B9B9B;
 }
 #result {
-  height: 580px;
+  height: 480px;
 }
 #input {
   height: 100px;
@@ -49,9 +50,9 @@ a:link, a:visited, a:hover, a:active {
 .tooltip {
   position: absolute;
 	display: inline-block;
-  left: 130px;
-  top: 360px;
-  width: 200px;
+  left: 120px;
+  top: 300px;
+  width: 150px;
   font-family: 'Noto Sans Thai UI', sans-serif;
   line-height: 20px;
 	text-align: left;
@@ -93,7 +94,7 @@ a:link, a:visited, a:hover, a:active {
 } */
 
 #conclusion {
-  width: 280px;
+  width: 300px;
   margin: 20px auto 0;
   display: flex;
   flex-direction: column;
