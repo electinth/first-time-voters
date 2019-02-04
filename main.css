@@ -31,21 +31,6 @@ path:hover {
 	fill-opacity: .7;
 }
 
-/* Style for Custom Tooltip */
-div.tooltip {
- 	position: absolute;
-	display: inline-block;
-	text-align: left;
-	line-height: 20px;
-	/*width: 100%;*/
-	height: 30px;
-	padding: 5px 10px;
-	background: white;
-	border: 0px;
-	border-radius: 5px;
-	pointer-events: none;
-}
-
 #input, #result {
   position: relative;
   width: 320px;
@@ -56,10 +41,16 @@ div.tooltip {
   position: absolute;
 }
 .tooltip {
-  left: 120px;
+  position: absolute;
+	display: inline-block;
+  left: 130px;
   top: 400px;
   width: 200px;
   font-family: 'Noto Sans Thai UI', sans-serif;
+  line-height: 20px;
+	text-align: left;
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* .legend {
