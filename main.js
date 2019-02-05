@@ -177,15 +177,6 @@ let updateMap = function () {
       hexCoords.push(hex([hexCenters[i].cx, hexCenters[i].cy], radius, Math.min(1, flip_condition ? parabola(frame_count, [0, frame_count_max], [0, 1]) : 1)));
       drawCoords(hexCoords[i]);
 
-      // if (flip_condition && !hexCenters[i].flipped) {
-      //   toAnimate = true;
-      //   // hexCenters[i].flipped = true;
-      // }
-      // if (!flip_condition && hexCenters[i].flipped) { // Slider dragged to the left
-      //   toAnimate = true;
-      //   // hexCenters[i].flipped = false;
-      // }
-
       // fill
       ctx.fillStyle = color(ratio >= 1); //d.properties.visited ? color(d.properties.visited) : color.range()[0];
       ctx.fill();

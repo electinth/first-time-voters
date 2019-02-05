@@ -38,6 +38,12 @@ a:link, a:visited, a:hover, a:active {
   text-align: center;
   color: #9B9B9B;
 }
+#legend .line-break {
+  white-space: pre;
+}
+#legend .line-break:after {
+  content: ' ';
+}
 #result {
   height: 480px;
 }
@@ -215,4 +221,37 @@ input[type=range]:focus::-ms-fill-lower {
 }
 input[type=range]:focus::-ms-fill-upper {
   background: #f1fefc;
+}
+
+@media only screen and (min-width: 1000px) {
+  #legend, #result, #input {
+    width: 375px;
+  }
+  #legend {
+    font-size: 13px;
+    text-align: left;
+    left: 200px;
+    margin-top: 20px;
+  }
+  #legend .line-break {
+    display: block;
+  }
+  #legend .line-break:after {
+    content: none;
+  }
+  #result {
+    height: 600px;
+    left: -200px;
+    margin-top: -40px;
+  }
+  #input {
+    left: 200px;
+    margin-top: -100px;
+  }
+  /* #map {
+    width: 375px;
+  } */
+  .tooltip {
+    left: 400px;
+  }
 }
