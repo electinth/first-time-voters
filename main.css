@@ -224,6 +224,9 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 @media only screen and (min-width: 1000px) {
+  #content {
+    height: 625px;
+  }
   #legend, #result, #input {
     width: 375px;
   }
@@ -240,7 +243,7 @@ input[type=range]:focus::-ms-fill-upper {
     content: none;
   }
   #result {
-    height: 600px;
+    height: 625px;
     left: -200px;
     margin-top: -40px;
   }
@@ -248,9 +251,9 @@ input[type=range]:focus::-ms-fill-upper {
     left: 200px;
     margin-top: -100px;
   }
-  /* #map {
+  #map {
     width: 375px;
-  } */
+  }
   .tooltip {
     left: 400px;
   }

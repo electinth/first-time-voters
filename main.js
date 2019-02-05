@@ -1,4 +1,10 @@
 //Width and height of map
+let window_width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+window.addEventListener('resize', () => {
+  window_width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+}, true);
+// let width = (window_width >= 1000) ? 375 : 300;
+// let height = (window_width >= 1000) ? 625 : 500;
 let width = 300;
 let height = 500;
 let radius = 15;
@@ -250,8 +256,8 @@ d3.csv("data/votes_by_province.csv").then(function(data) {
     let red;
     let closest_hex;
     canvas.on("mousemove", function() {
-      let mouseX = d3.event.layerX || d3.event.offsetX;
-      let mouseY = d3.event.layerY || d3.event.offsety;
+      let mouseX = (d3.event.layerX || d3.event.offsetX) * ((window_width >= 1000) ? 0.8 : 1);
+      let mouseY = (d3.event.layerY || d3.event.offsety) * ((window_width >= 1000) ? 0.8 : 1);
 
       // tooltip off first
       tooltip.transition()
@@ -281,7 +287,7 @@ d3.csv("data/votes_by_province.csv").then(function(data) {
         tooltip.transition()
           .duration(100)
           .style("opacity", 0.8);
-        tooltip.html(`<b>${closest_hex.name_th}</b><br />จำนวนคนรุ่นใหม่่: <b>${closest_hex.firsttime.toLocaleString()}</b><br />ความต่างคะแนน: <b>${closest_hex.diff.toLocaleString()}</b>`);
+        tooltip.html(`<b>${closest_hex.name_th}</b><br />จำนวนคนรุ่นใหม่: <b>${closest_hex.firsttime.toLocaleString()}</b><br />ความต่างคะแนน: <b>${closest_hex.diff.toLocaleString()}</b>`);
       }
     });
 
