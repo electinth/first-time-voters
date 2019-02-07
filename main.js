@@ -158,7 +158,7 @@ const thaiHexMap = [
 ];
 
 let geo;
-const frame_count_max = 20;
+const frame_count_max = 30;
 let frame_count = 0;
 const fps_interval = 1000/60;
 let now, then, elapsed;
@@ -300,7 +300,7 @@ let firsttime_turnout = 0;
 let range_number = d3.select(".range-number");
 function sliderUpdate(value) {
   range_number
-    .style("left", (300-40-40)*value/100)
+    .style("left", (((window_width >= 1000) ? 375 : 300) -40-40)*value/100)
     .text(value);
 
   firsttime_turnout = value;
