@@ -1,4 +1,4 @@
-//Width and height of map
+// Width and height of map
 let window_width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 window.addEventListener('resize', () => {
   window_width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
@@ -158,7 +158,7 @@ const thaiHexMap = [
 ];
 
 let geo;
-const frame_count_max = 30;
+const frame_count_max = 20;
 let frame_count = 0;
 const fps_interval = 1000/60;
 let now, then, elapsed;
