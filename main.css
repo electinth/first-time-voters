@@ -34,6 +34,23 @@ a:link, a:visited, a:hover, a:active {
   color: black;
   text-align: center;
   scroll-snap-align: start;
+  padding: 50px;
+}
+.slide p {
+  font-size: 17px;
+  line-height: 23px;
+  width: 200px;
+  margin: 0 auto;
+}
+.slide p.head {
+  font-family: 'The Matter', serif;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 28px;
+}
+.slide p.sub {
+  font-family: 'The Matter', serif;
+  font-size: 13px;
 }
 .bg-green {
   background-color: #14e6c8;
