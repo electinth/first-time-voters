@@ -34,13 +34,13 @@ a:link, a:visited, a:hover, a:active {
   color: black;
   text-align: center;
   scroll-snap-align: start;
-  padding: 40px 40px;
+  padding: 30px 30px;
 }
 .slide p {
   font-size: 17px;
   line-height: 23px;
-  width: 225px;
-  margin: 0 auto;
+  width: 250px;
+  margin: 10px auto;
 }
 .slide p.head {
   font-family: 'The Matter', serif;
@@ -55,7 +55,7 @@ a:link, a:visited, a:hover, a:active {
   font-size: 17px;
 }
 .slide img {
-  width: 225px;
+  width: 220px;
 }
 .bg-green {
   background-color: #14e6c8;
@@ -64,6 +64,12 @@ a:link, a:visited, a:hover, a:active {
 .bg-black {
   background-color: black;
   color: white;
+}
+.bold {
+  font-weight: bold;
+}
+.highlight {
+  color: #14e6c8;
 }
 
 #content {
