@@ -34,7 +34,7 @@ a:link, a:visited, a:hover, a:active {
   color: black;
   text-align: center;
   scroll-snap-align: start;
-  padding: 100px 40px;
+  padding: 40px 40px;
 }
 .slide p {
   font-size: 17px;
@@ -47,6 +47,7 @@ a:link, a:visited, a:hover, a:active {
   font-size: 24px;
   font-weight: 800;
   line-height: 28px;
+  margin-top: 60px;
   margin-bottom: 1em;
 }
 .slide p.sub {
