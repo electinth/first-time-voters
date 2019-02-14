@@ -347,7 +347,20 @@ AOS.init({
   mirror: false, // whether elements should animate out while scrolling past them
   anchorPlacement: 'top-bottom', // defines which position of the element regarding to window should trigger the animation
 });
-document.addEventListener('aos:in', e => {
+document.addEventListener('aos:in:1-percent', e => {
+  console.log(1);
+  console.log(e.detail);
+});
+document.addEventListener('aos:in:25-percent', e => {
+  console.log(25);
+  console.log(e.detail);
+});
+document.addEventListener('aos:in:50-percent', e => {
+  console.log(50);
+  console.log(e.detail);
+});
+document.addEventListener('aos:in:100-percent', e => {
+  console.log(100);
   console.log(e.detail);
 });
 

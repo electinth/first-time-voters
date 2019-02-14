@@ -7,7 +7,7 @@
   box-sizing: border-box;
 }
 .site-header {
-  /* position: fixed; */
+  position: relative;
   width: 100%;
   top: 0;
   z-index: 2;
@@ -24,7 +24,7 @@ a:link, a:visited, a:hover, a:active {
 }
 
 .slide {
-  /* position: fixed; */
+  position: relative;
   width: 100%;
   height: 100vh;
   background-color: rgba(255, 255, 255, 0.5);
@@ -32,6 +32,7 @@ a:link, a:visited, a:hover, a:active {
   text-align: center;
   scroll-snap-align: start;
   padding: 30px 30px;
+  z-index: 1;
 }
 .slide p {
   font-size: 17px;
@@ -77,11 +78,11 @@ a:link, a:visited, a:hover, a:active {
 #content {
   position: fixed;
   height: 600px;
-  top: 0px;
-  left: 0px;
-  right: 0px;
+  top: 0;
+  left: 0;
+  right: 0;
   margin: 0 auto;
-  z-index: -1;
+  z-index: 0;
 }
 #legend, #result, #input {
   position: relative;
@@ -122,39 +123,6 @@ a:link, a:visited, a:hover, a:active {
   pointer-events: none;
   z-index: 1;
 }
-
-/* .legend {
-	position: relative;
-	left: 250px;
-	top: 480px;
-	margin-bottom: -100px;
-}
-
-#credit {
-	text-align: center;
-}
-.logo {
-  position: relative;
-  display: inline-block;
-  height: 50px;
-  line-height: 50px;
-  vertical-align: middle;
-  background-size: cover;
-  background-repeat:no-repeat;
-  background-position: center center;
-}
-.logo a span {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-.boonmeelab {
-  background-image: url('logo_boonmeelab.png');
-  width: 150px;
-} */
 
 #conclusion {
   width: 300px;
@@ -293,12 +261,10 @@ input[type=range]:focus::-ms-fill-upper {
     top: 50%;
     right: 60%;
   }
-  .slide.no-img {
-    position: unset;
-  }
   .slide.no-img p {
-    position: unset;
-    margin-top: 0px;
+    top: 0;
+    left: 0;
+    right: 0;
   }
   .slide img {
     width: 440px;
@@ -319,7 +285,8 @@ input[type=range]:focus::-ms-fill-upper {
     font-size: 20px;
     text-align: center;
     width: 550px;
-    margin-top: 40px;
+    margin-top: 20%;
+    padding-top: 180px;
   }
   .slide p.bold {
     top: 50%;
