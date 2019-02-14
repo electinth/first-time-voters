@@ -313,6 +313,8 @@ input[type=range]:focus::-ms-fill-upper {
 
   #content {
     height: 625px;
+    top: 50%;
+    margin-top: -313px;
   }
   #legend, #result, #input {
     width: 375px;
