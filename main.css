@@ -40,6 +40,16 @@ a:link, a:visited, a:hover, a:active {
   width: 250px;
   margin: 10px auto;
 }
+.slide ul {
+  font-size: 17px;
+  line-height: 23px;
+  width: 250px;
+  margin: 10px auto;
+  text-align: left;
+}
+.slide ul li {
+  margin-top: 10px;
+}
 .slide p.head {
   font-family: 'The Matter', serif;
   font-size: 24px;
@@ -271,6 +281,13 @@ input[type=range]:focus::-ms-fill-upper {
     margin-top: -220px;
     top: 50%;
     right: 60%;
+  }
+  .slide ul {
+    width: 300px;
+    position: absolute;
+    margin-top: -220px;
+    top: 50%;
+    left: 50%;
   }
   .slide.no-img p {
     top: 0;
