@@ -42,6 +42,9 @@ ctx.imageSmoothingEnabled = false;
 // };
 
 // Append div for tooltip
+let status = d3.select("#result").append("div")
+  .attr("class", "tooltip status")
+  .style("opacity", 1);
 let tooltip = d3.select("#result").append("div")
   .attr("class", "tooltip")
   .style("opacity", 0);
@@ -219,6 +222,9 @@ let updateMap = function () {
   } else {
     requestAnimationFrame(updateMap);
   }
+
+  let affected_provinces = hexCenters.filter(h => h.flipped);
+  status.html(`เปลี่ยนแปลงใน ${affected_provinces.length} จังหวัด<br />คิดเป็น ส.ส. ${affected_provinces.reduce((a, p) => a + p.mpnumber, 0)} คน`);
 }
 
 let hexCenters = [];
@@ -234,6 +240,7 @@ d3.csv("data/votes_by_province.csv").then(function(data) {
           geo[i].properties.number1 = d.number1;
           geo[i].properties.number2 = d.number2;
           geo[i].properties.firsttime = d.firsttime;
+          geo[i].properties.mpnumber = d.mpnumber;
           break;
         }
       }
@@ -249,7 +256,8 @@ d3.csv("data/votes_by_province.csv").then(function(data) {
         cy: c[1],
         name: geo[i].properties.NAME_1,
         name_th: geo[i].properties.NL_NAME_1,
-        flipped: false
+        flipped: false,
+        mpnumber: +geo[i].properties.mpnumber
       });
     }
 
@@ -287,7 +295,7 @@ d3.csv("data/votes_by_province.csv").then(function(data) {
         tooltip.transition()
           .duration(100)
           .style("opacity", 0.8);
-        tooltip.html(`<b>${closest_hex.name_th}</b><br />จำนวนคนรุ่นใหม่: <b>${closest_hex.firsttime.toLocaleString()}</b><br />ความต่างคะแนน: <b>${closest_hex.diff.toLocaleString()}</b>`);
+        tooltip.html(`<b>${closest_hex.name_th}</b> (ส.ส. ${closest_hex.mpnumber} คน)<br />จำนวนคนรุ่นใหม่: <b>${closest_hex.firsttime.toLocaleString()}</b><br />ความต่างคะแนน: <b>${closest_hex.diff.toLocaleString()}</b>`);
       }
     });
 

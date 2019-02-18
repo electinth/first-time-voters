@@ -136,13 +136,16 @@ a:link, a:visited, a:hover, a:active {
   position: absolute;
 	display: inline-block;
   left: 120px;
-  top: 300px;
-  width: 150px;
+  top: 360px;
+  width: 180px;
   font-family: 'Noto Sans Thai UI', sans-serif;
   line-height: 20px;
 	text-align: left;
   pointer-events: none;
   z-index: 1;
+}
+.tooltip.status {
+  top: 310px;
 }
 
 #conclusion {
