@@ -305,6 +305,7 @@ d3.csv("data/votes_by_province.csv").then(function(data) {
 });
 
 let firsttime_turnout = 0;
+let range_input = d3.select("#input input");
 let range_number = d3.select(".range-number");
 function sliderUpdate(value) {
   range_number
@@ -355,21 +356,25 @@ AOS.init({
   mirror: false, // whether elements should animate out while scrolling past them
   anchorPlacement: 'top-bottom', // defines which position of the element regarding to window should trigger the animation
 });
+document.addEventListener('aos:in:0-percent', e => {
+  range_input.property("value", 0);
+  sliderUpdate(0);
+});
 document.addEventListener('aos:in:1-percent', e => {
-  console.log(1);
-  console.log(e.detail);
+  range_input.property("value", 1);
+  sliderUpdate(1);
 });
 document.addEventListener('aos:in:25-percent', e => {
-  console.log(25);
-  console.log(e.detail);
+  range_input.property("value", 25);
+  sliderUpdate(25);
 });
 document.addEventListener('aos:in:50-percent', e => {
-  console.log(50);
-  console.log(e.detail);
+  range_input.property("value", 50);
+  sliderUpdate(50);
 });
 document.addEventListener('aos:in:100-percent', e => {
-  console.log(100);
-  console.log(e.detail);
+  range_input.property("value", 100);
+  sliderUpdate(100);
 });
 
 document.addEventListener('aos:out', e => {
