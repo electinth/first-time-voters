@@ -23,7 +23,8 @@ let color = d3.scaleLinear().clamp(true)
   .range(["#e4e5e6", "#14E6C8"]);
 
 //Create and append canvas
-let canvas = d3.select("#result").append("canvas")
+let result = d3.select("#result");
+let canvas = result.append("canvas")
   .attr("id", "map")
   .attr("width", width)
   .attr("height", height);
@@ -42,10 +43,10 @@ ctx.imageSmoothingEnabled = false;
 // };
 
 // Append div for tooltip
-let status = d3.select("#result").append("div")
+let status = result.append("div")
   .attr("class", "tooltip status")
   .style("opacity", 1);
-let tooltip = d3.select("#result").append("div")
+let tooltip = result.append("div")
   .attr("class", "tooltip")
   .style("opacity", 0);
 
@@ -264,8 +265,9 @@ d3.csv("data/votes_by_province.csv").then(function(data) {
     let red;
     let closest_hex;
     canvas.on("mousemove", function() {
-      let mouseX = (d3.event.layerX || d3.event.offsetX) * ((window_width >= 1000) ? 0.8 : 1);
-      let mouseY = (d3.event.layerY || d3.event.offsety) * ((window_width >= 1000) ? 0.8 : 1);
+      let xy = d3.mouse(this);
+      let mouseX = xy[0] * ((window_width >= 1000) ? 0.8 : 1);
+      let mouseY = xy[1] * ((window_width >= 1000) ? 0.8 : 1);
 
       // tooltip off first
       tooltip.transition()
