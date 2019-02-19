@@ -44,8 +44,7 @@ ctx.imageSmoothingEnabled = false;
 
 // Append div for tooltip
 let status = result.append("div")
-  .attr("class", "tooltip status")
-  .style("opacity", 1);
+  .attr("class", "tooltip status");
 let tooltip = result.append("div")
   .attr("class", "tooltip")
   .style("opacity", 0);
@@ -373,11 +372,10 @@ document.addEventListener('aos:in:25-percent', e => {
 document.addEventListener('aos:in:50-percent', e => {
   range_input.property("value", 50);
   sliderUpdate(50);
+  status.style("opacity", 0);
 });
 document.addEventListener('aos:in:100-percent', e => {
   range_input.property("value", 100);
   sliderUpdate(100);
-});
-
-document.addEventListener('aos:out', e => {
+  status.style("opacity", 1);
 });
