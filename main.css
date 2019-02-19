@@ -124,7 +124,7 @@ a:link, a:visited, a:hover, a:active {
   content: ' ';
 }
 #result {
-  height: 480px;
+  height: 370px;
 }
 #input {
   height: 100px;
@@ -136,7 +136,7 @@ a:link, a:visited, a:hover, a:active {
   position: absolute;
 	display: inline-block;
   left: 120px;
-  top: 360px;
+  top: 280px;
   width: 180px;
   font-family: 'Noto Sans Thai UI', sans-serif;
   line-height: 20px;
@@ -145,7 +145,7 @@ a:link, a:visited, a:hover, a:active {
   z-index: 1;
 }
 .tooltip.status {
-  top: 310px;
+  top: 230px;
 }
 
 #conclusion {

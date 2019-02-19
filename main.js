@@ -6,8 +6,9 @@ window.addEventListener('resize', () => {
 // let width = (window_width >= 1000) ? 375 : 300;
 // let height = (window_width >= 1000) ? 625 : 500;
 let width = 300;
-let height = 500;
-let radius = 15;
+let height = 370;
+let radius = 12;
+const map_offsets = {x: 70, y: 10};
 
 // D3 Projection
 let projection = d3.geoAlbers()
@@ -248,7 +249,7 @@ d3.csv("data/votes_by_province.csv").then(function(data) {
 
     for (let i = 0; i < geo.length; i++) {
       let hexCenter = thaiHexMap.find(h => h.id === +geo[i].properties.ISO);
-      let c = [(hexCenter.x - ((hexCenter.y % 2 === 0) ? 0.5 : 0)) * radius * Math.sqrt(3) + 50, hexCenter.y * radius * 3 / 2 + (radius * 2)];
+      let c = [(hexCenter.x - ((hexCenter.y % 2 === 0) ? 0.5 : 0)) * radius * Math.sqrt(3) + map_offsets.x, hexCenter.y * radius * 3 / 2 + map_offsets.y];
 
       hexCenters.push({
         id: hexCenter.id,
