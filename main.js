@@ -340,3 +340,14 @@ percents.forEach(function(percent, idx) {
       sliderUpdate(percent);
     });
 });
+new ScrollMagic.Scene({
+    triggerElement: ".bg-through",
+    duration: "100%"
+  })
+  .addTo(controller)
+  .on("enter", function (e) {
+    d3.select(".sharebox").style("visibility", "visible");
+  })
+  .on("leave", function (e) {
+    d3.select(".sharebox").style("visibility", "hidden");
+  });
