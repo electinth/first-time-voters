@@ -380,3 +380,8 @@ document.addEventListener('aos:in:100-percent', e => {
   sliderUpdate(100);
   status.style("opacity", 1);
 });
+
+// jquery.snapscroll
+$(function () {
+  $("body").snapscroll();
+});
