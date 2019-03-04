@@ -3,8 +3,6 @@ let window_width = Math.max(document.documentElement.clientWidth, window.innerWi
 window.addEventListener('resize', () => {
   window_width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 }, true);
-// let width = (window_width >= 1000) ? 375 : 300;
-// let height = (window_width >= 1000) ? 625 : 500;
 let width = 300;
 let height = 370;
 let radius = 12;
