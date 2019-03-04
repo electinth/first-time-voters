@@ -96,8 +96,11 @@ a:link, a:visited, a:hover, a:active {
   background-color: transparent;
   color: black;
 }
-.bg-through {
+/* .bg-through {
   pointer-events: none;
+} */
+.bg-last {
+  margin-bottom: 100vh;
 }
 .bold {
   font-weight: bold;
