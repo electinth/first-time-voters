@@ -1,9 +1,12 @@
+stages:
+  - deploy
+
 pages:
   stage: deploy
   script:
-  - echo 'static page'
+    - echo 'static page'
   artifacts:
     paths:
-    - /
+        - /
   only:
-  - master
+    - master
